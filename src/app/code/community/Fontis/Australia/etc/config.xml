@@ -20,7 +20,7 @@
 <config>
     <modules>
         <Fontis_Australia>
-            <version>3.1.1</version>
+            <version>3.2.0</version>
         </Fontis_Australia>
     </modules>
     <global>
@@ -52,6 +52,7 @@
             <australia_setup>
                 <setup>
                     <module>Fontis_Australia</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
                 </setup>
                 <connection>
                     <use>directory_setup</use>

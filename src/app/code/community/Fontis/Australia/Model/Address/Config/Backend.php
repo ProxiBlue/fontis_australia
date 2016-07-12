@@ -22,6 +22,7 @@
 class Fontis_Australia_Model_Address_Config_Backend
 {
     const AUSTRALIA_POST = 'australia/address_australiapost';
+    const LOCAL_POSTCODE_SUBURB_LOOKUP = 'australia/address_localLookup';
 
     /**
      * Returns an array of the available address validation backends.
@@ -31,6 +32,10 @@ class Fontis_Australia_Model_Address_Config_Backend
     public function toOptionArray()
     {
         return array(
+            array(
+                'value' => self::LOCAL_POSTCODE_SUBURB_LOOKUP,
+                'label' => Mage::helper('australia')->__('Local Postcode + Suburb + State validation'),
+            ),
             array(
                 'value' => self::AUSTRALIA_POST,
                 'label' => Mage::helper('australia')->__('Australia Post Delivery Choices'),

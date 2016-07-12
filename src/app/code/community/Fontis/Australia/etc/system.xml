@@ -812,6 +812,16 @@
                             <show_in_store>1</show_in_store>
                             <comment>Turn on address validation during the billing and shipping sections of the checkout.</comment>
                         </enabled>
+                        <enabled_by_id translate="label comment">
+                            <label>Enabled for saved addresses</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Also validate previously saved addresses that has not yet been validated (legacy addresses). Will only be validated once</comment>
+                        </enabled_by_id>
                         <backend translate="label comment">
                             <label>Backend</label>
                             <frontend_type>select</frontend_type>

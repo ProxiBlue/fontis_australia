@@ -112,7 +112,7 @@ class Fontis_Australia_Helper_Data extends Mage_Core_Helper_Abstract
             return array();
         }
 
-        $cityQueryTet = (Mage::getStoreConfig("fontis_australia/postcode_autocomplete/match_start"))
+        $cityQueryText = (Mage::getStoreConfig("fontis_australia/postcode_autocomplete/match_start"))
             ? $this->getQueryText() : '%' . $this->getQueryText();
 
         $res = Mage::getSingleton('core/resource');
@@ -123,7 +123,7 @@ class Fontis_Australia_Helper_Data extends Mage_Core_Helper_Abstract
              INNER JOIN ' . $res->getTableName('directory_country_region') . ' AS dcr ON au.region_code = dcr.code
              WHERE city LIKE :city ORDER BY city, region_code, postcode
              LIMIT ' . $this->getPostcodeAutocompleteMaxResults(),
-            array('city' => $cityQueryTet . '%')
+            array('city' => $cityQueryText . '%')
         );
     }
 }

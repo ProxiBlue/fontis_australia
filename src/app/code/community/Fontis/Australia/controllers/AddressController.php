@@ -66,16 +66,77 @@ class Fontis_Australia_AddressController extends Mage_Core_Controller_Front_Acti
         }
 
         // Check that all of the required fields are present
-        if (empty($data) || !isset($data['country_id'], $data['region_id'], $data['street'], $data['city'], $data['postcode'])) {
+        if (empty($data)
+            || !isset($data['country_id'], $data['region_id'], $data['street'], $data['city'], $data['postcode'])
+        ) {
             // Return a "400 Bad Request" response
             $this->getResponse()->setHttpResponseCode(400);
             return;
         }
 
+        $result = $this->doValidation($data);
+
+        if(!array_key_exists('Address',$result)) {
+            $result['Address'] = array();
+            $list = Mage::app()->getLocale()->getCountryTranslationList();
+            $list = array_flip($list);
+            $result['Address']['Country'] = array('CountryCode' => $list[$result['country']]);
+            $result['Address']['PostCode'] = $result['postcode'];
+            $result['Address']['StateOrTerritory'] = $result['state'];
+            $result['Address']['SuburbOrPlaceOrLocality'] = $result['suburb'];
+            $result['Address']['AddressLine'] = $result['street'][0];
+        }
+        $this->getResponse()->setHeader('Content-type', 'application/json');
+        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+
+    }
+
+
+    /**
+     * Validate the adress using the address id.
+     * This can be used to validate already (past) addresses in checkout that is selected.
+     *
+     * @throws Zend_Controller_Response_Exception
+     */
+    public function validatebyidAction()
+    {
+        $result = array();
+        // Check for a valid POST request
+        if (!$this->getRequest()->isPost()) {
+            // Return a "405 Method Not Allowed" response
+            $this->getResponse()->setHttpResponseCode(405);
+            return;
+        }
+        $request = $this->getRequest();
+        if ($request->getParam('billing_address_id')) {
+            $address = Mage::getModel('customer/address')->load($request->getParam('billing_address_id'));
+            if($address->getId()) {
+                $result = $this->doValidation($address->getData());
+            }
+        } elseif ($request->getParam('shipping_address_id')) {
+            $address = Mage::getModel('customer/address')->load($request->getParam('shipping_address_id'));
+            if($address->getId()) {
+                $result = $this->doValidation($address->getData());
+            }
+        }
+
+        $this->getResponse()->setHeader('Content-type', 'application/json');
+
+        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+
+    }
+
+    private function doValidation($data)
+    {
+
         $country = Mage::getModel('directory/country')->load($data['country_id'])->getName();
         $region = Mage::getModel('directory/region')->load($data['region_id'])->getCode();
 
-        $result = $this->client->validateAddress(
+        if(!is_array($data['street'])) {
+            $data['street'] = (array) $data['street'];
+        }
+
+        return $this->client->validateAddress(
             $data['street'],
             $region,
             $data['city'],
@@ -83,7 +144,5 @@ class Fontis_Australia_AddressController extends Mage_Core_Controller_Front_Acti
             $country
         );
 
-        $this->getResponse()->setHeader('Content-type', 'application/json');
-        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
     }
 }

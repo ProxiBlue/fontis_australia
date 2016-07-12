@@ -35,8 +35,12 @@ class Fontis_Australia_Model_Address_Australiapost implements Fontis_Australia_M
         if ($helper->isDeliveryChoicesDeveloperMode()) {
             $options['developer_mode'] = true;
         } else {
-            $options['email_address'] = Mage::getStoreConfig('fontis_australia/address_validation/delivery_choices_account_email');
-            $options['password'] = Mage::getStoreConfig('fontis_australia/address_validation/delivery_choices_account_password');
+            $options['email_address'] = Mage::getStoreConfig(
+                'fontis_australia/address_validation/delivery_choices_account_email'
+            );
+            $options['password'] = Mage::getStoreConfig(
+                'fontis_australia/address_validation/delivery_choices_account_password'
+            );
         }
 
         $this->setClient(Auspost::factory($options)->get('deliverychoice'));
@@ -66,7 +70,7 @@ class Fontis_Australia_Model_Address_Australiapost implements Fontis_Australia_M
      */
     public function validateAddress(array $street, $state, $suburb, $postcode, $country)
     {
-        $address = array(
+        $addressData = array(
             'address_line_1' => $street[0],
             'state' => $state,
             'suburb' => $suburb,
@@ -75,19 +79,18 @@ class Fontis_Australia_Model_Address_Australiapost implements Fontis_Australia_M
         );
 
         if (count($street) > 1) {
-            $address['address_line_2'] = $street[1];
+            $addressData['address_line_2'] = $street[1];
         }
 
-        $result = array();
         try {
-            $result = $this->client->validateAddress($address);
-
+            $result = $this->client->validateAddress($addressData);
             $result = $result['ValidateAustralianAddressResponse'];
             if (is_array($result['Address']['AddressLine'])) {
                 $result['Address']['AddressLine'] = $result['Address']['AddressLine'][0];
             }
             unset($result['Address']['DeliveryPointIdentifier']);
         } catch (Exception $e) {
+            $result = $addressData;
             $result['ValidAustralianAddress'] = false;
             Mage::logException($e);
         }
