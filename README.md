@@ -25,4 +25,5 @@ An additional setting is to validate saved addresses.
 When a saved address is used at checkout, the same validation process applies.
 If the client chooses to chnage the address, a new address entry will be created, and set as the default.
 The previous address will remain in teh client address book, and will not be automatically deleted.
+Saved addresses will only be validated once. Addresses that are validated a checkout, will not be validated again.
 
