@@ -40,6 +40,7 @@
             // Assume item at index 1 is region_id, item at index 3 is postcode
             $('billing:region_id').value = tokens[1];
             $('billing:postcode').value = tokens[3];
+            jQuery('select').trigger("chosen:updated");
         }
     
         // Create the autocompleter and assign it to a variable for future use.
@@ -73,6 +74,7 @@
             // Assume item at index 1 is region_id, item at index 3 is postcode
             $('shipping:region_id').value = tokens[1];
             $('shipping:postcode').value = tokens[3];
+            jQuery('select').trigger("chosen:updated");
         }
     
         // Create the autocompleter and assign it to a variable for future use.

@@ -39,6 +39,7 @@
         // Assume item at index 1 is region_id, item at index 3 is postcode
         $('region_id').value = tokens[1];
         $('zip').value = tokens[3];
+        jQuery('select').trigger("chosen:updated");
     }
 
     // Create the autocompleter and assign it to a variable for future use.
