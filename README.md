@@ -12,4 +12,17 @@ The import file for eParcel rates can have one additional column for the Warehou
 
 Leave Warehouse ID empty when not using Multi Warehouse Extension. 
 
-    
+Local Postcode + Suburb + State validation backend
+==================================================
+
+You can enable this option in admin, under the Fontis Australia settings. Address Validation=>Backend
+When enabled address entry at checkout will be validated on a match of postcode , suburb and state.
+If an exact match to the entered address is not found, combinations of the entered values will be used to build a potentials list.
+
+The client will thereafter be prompted to use one of the potential entries, edit current entry, or to continue using the entered address
+
+An additional setting is to validate saved addresses.
+When a saved address is used at checkout, the same validation process applies.
+If the client chooses to chnage the address, a new address entry will be created, and set as the default.
+The previous address will remain in teh client address book, and will not be automatically deleted.
+
