@@ -56,7 +56,7 @@ function createModal(title, content) {
         title: title,
         top: 40,
         width: 520,
-        zIndex: 1000,
+        zIndex: 10000,
         recenterAuto: false,
         hideEffect: Element.hide,
         showEffect: Element.show,

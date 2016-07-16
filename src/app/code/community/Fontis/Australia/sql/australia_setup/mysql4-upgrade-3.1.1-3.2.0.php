@@ -26,20 +26,16 @@ $installer->startSetup();
  * Add a customer address attribute to flag a saved address as validated
  *
  */
-$installer->run(
-
-    $this->addAttribute(
-        'customer_address', 'validated', array(
-            'label' => 'Validated',
-            'type' => 'int',
-            'input' => 'text',
-            'position' => 600,
-            'visible' => false,
-            'required' => false,
-            'is_user_defined' => false,
-        )
+$this->addAttribute(
+    'customer_address', 'validated', array(
+        'label' => 'Validated',
+        'type' => 'int',
+        'input' => 'text',
+        'position' => 600,
+        'visible' => false,
+        'required' => false,
+        'is_user_defined' => false,
     )
 );
-
 
 $installer->endSetup();
