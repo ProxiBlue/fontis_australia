@@ -22,6 +22,7 @@
         var australiaCountryRegions = <?php echo $this->helper('directory')->getRegionJson(); ?>;
         var addressSuggestTemplate = <?php echo Zend_Json::encode($this->getChildHtml('fontis.australia.address.suggestion')); ?>;
         var addressFailureTemplate = <?php echo Zend_Json::encode($this->getChildHtml('fontis.australia.address.failure')); ?>;
+        var validateAddressById = parseInt('<?php echo Mage::getStoreConfig('fontis_australia/address_validation/enabled_by_id'); ?>');
     </script>
     <script src="<?php echo $this->getSkinUrl('fontis/australia/js/opcheckout.js') ?>"></script>
 <?php endif ?>
