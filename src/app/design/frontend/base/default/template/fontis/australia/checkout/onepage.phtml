@@ -16,13 +16,16 @@
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 ?>
+
 <?php if (Mage::helper('australia/address')->isAddressValidationEnabled()): ?>
     <script>
         var addressValidationUrl = '<?php echo $this->getUrl('australia/address/validate'); ?>';
         var australiaCountryRegions = <?php echo $this->helper('directory')->getRegionJson(); ?>;
         var addressSuggestTemplate = <?php echo Zend_Json::encode($this->getChildHtml('fontis.australia.address.suggestion')); ?>;
         var addressFailureTemplate = <?php echo Zend_Json::encode($this->getChildHtml('fontis.australia.address.failure')); ?>;
+        var addresspotentialsTemplate = <?php echo Zend_Json::encode($this->getChildHtml('fontis.australia.address.potential')); ?>;
         var validateAddressById = parseInt('<?php echo Mage::getStoreConfig('fontis_australia/address_validation/enabled_by_id'); ?>');
+        var addressValidationUrlById = parseInt('<?php echo $this->getUrl('australia/address/validatebyid'); ?>');
     </script>
     <script src="<?php echo $this->getSkinUrl('fontis/australia/js/opcheckout.js') ?>"></script>
 <?php endif ?>

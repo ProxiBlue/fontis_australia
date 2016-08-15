@@ -65,9 +65,6 @@ class Fontis_Australia_Model_Address_LocalLookup implements Fontis_Australia_Mod
         return $result;
     }
 
-    /**
-     * @return array
-     */
     public function getPostcodeValidationResults($state, $suburb, $postcode, $country)
     {
         if (strtolower($country) != 'australia') {
@@ -79,22 +76,25 @@ class Fontis_Australia_Model_Address_LocalLookup implements Fontis_Australia_Mod
         $result = $conn->fetchAll(
             'SELECT au.*, dcr.region_id FROM ' . $res->getTableName('australia_postcode') . ' AS au
              INNER JOIN ' . $res->getTableName('directory_country_region') . ' AS dcr ON au.region_code = dcr.code
-             WHERE city = :city AND postcode = :postcode AND region_code = :state  ORDER BY city, region_code, postcode ',
-            array('city' => $suburb, 'postcode' => $postcode, 'state' => $state)
+             WHERE city = :city AND postcode = :postcode AND region_code = :state  
+             AND dcr.country_id = :country_id
+             ORDER BY city, region_code, postcode ',
+            array('city' => $suburb, 'postcode' => $postcode, 'state' => $state, 'country_id' => 'AU')
         );
         if(count($result) == 0) {
             // lets find some potential matches...
             $result = $conn->fetchAll(
                 'SELECT DISTINCT au.*, dcr.region_id FROM ' . $res->getTableName('australia_postcode') . ' AS au
-             INNER JOIN ' . $res->getTableName('directory_country_region') . ' AS dcr ON au.region_code = dcr.code
+             RIGHT JOIN ' . $res->getTableName('directory_country_region') . ' AS dcr ON au.region_code = dcr.code
              WHERE (postcode = :postcode)  
              OR (city = :city) 
              OR (city = :city AND postcode = :postcode) 
              OR (postcode = :postcode AND region_code = :state) 
+             AND dcr.country_id = :country_id
              ORDER BY city, region_code, postcode',
-                array('city' => $suburb, 'postcode' => $postcode, 'state' => $state)
+                array('city' => $suburb, 'postcode' => $postcode, 'state' => $state, 'country_id' => 'AU')
             );
-            $result = array_unique($result);
+
             $this->_potentials = $result;
             throw new Exception('Address postcode/state/suburb combination do not match anything','10810');
         }
