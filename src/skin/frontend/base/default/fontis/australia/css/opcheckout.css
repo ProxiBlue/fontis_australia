@@ -1,7 +1,10 @@
 /** Core styles for the modal */
 .dialog {
     display: block;
-    position: absolute;
+    position: fixed !important;
+    left: 0;
+    right: 0;
+    overflow: visible !important;
 }
 
 .dialog table.table_window  {
@@ -50,9 +53,26 @@
 }
 
 #address-validator-window_content {
-    min-height: 100px;
+    min-height: 300px;
 }
 
 .address-validator .magento_message {
     padding: 10px 18px;
+}
+
+#modal_dialog_message {
+    min-height: 290px;
+}
+
+.address-validator {
+    background: transparent !important;
+}
+
+.magento_content {
+    overflow: visible !important;
+}
+
+.address-validator-buttons {
+    position: absolute;
+    bottom: 11px;
 }
