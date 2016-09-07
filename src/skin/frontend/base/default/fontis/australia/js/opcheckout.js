@@ -123,9 +123,9 @@ function success(transport, progress, section) {
             var validCity = response.suburb;
         }
 
-            var validAddress = validStreet + ', ' + validCity + ', ' + validRegion + ' ' + validPostcode + ', ' + validCountry;
-
+        var validAddress = validStreet + ', ' + validCity + ', ' + validRegion + ' ' + validPostcode + ', ' + validCountry;
         var invalidAddress = false;
+
         if (
             params[progress + '[city]'] != validCity ||
             australiaCountryRegions[params[progress + '[country_id]']][params[progress + '[region_id]']].code != validRegion ||
@@ -133,6 +133,7 @@ function success(transport, progress, section) {
         ) {
             invalidAddress = true;
         }
+
         if (invalidAddress) {
             var addressSuggest = addressSuggestTemplate;
             addressSuggest = addressSuggest.replace('Provided Address', address);
@@ -161,6 +162,7 @@ function success(transport, progress, section) {
             $('cancel-' + progress + '-address').observe('click', function () {
                 addressValidationModal.close();
             });
+
         } else {
             validateAddress(progress, section);
         }
@@ -188,21 +190,26 @@ function success(transport, progress, section) {
         addressPotential = addressPotential.replace('submit-user-x-address', 'submit-user-' + progress + '-address');
         addressPotential = addressPotential.replace('cancel-invalid-x-address', 'cancel-' + progress + '-address');
         createModal('Address Validation', addressPotential);
-        // do chosen
-        // fix any chosen elements
-        jQuery("select").chosen(
-            {
+
+        // Check if we are using the Chosen jQuery plugin
+        var usingChosen = typeof jQuery().chosen !== 'undefined';
+
+        // Fix any chosen elements
+        if (usingChosen) {
+            jQuery("select").chosen({
                 disable_search_threshold: 10,
                 no_results_text: "Sorry, nothing found!",
                 width: "84%",
                 inherit_select_classes: true
-
             });
+        }
+
         // Put observers on the buttons in the modal
         $('submit-valid-' + progress + '-address').observe('click', function () {
             addressValidationModal.close();
             validateAddress(progress, section);
         });
+
         $('submit-user-' + progress + '-address').observe('click', function () {
             var e = document.getElementById("potential_address_list");
             var address = JSON.parse(e.options[e.selectedIndex].value);
@@ -216,12 +223,23 @@ function success(transport, progress, section) {
             $(progress + ':city').value = address.city;
             $(progress + ':region_id').value = getRegionId(address.region_code, progress);
             $(progress + ':postcode').value = address.postcode;
-            $(progress + ':save_in_address_book').checked = true;
-            // unselect the selected address
-            document.getElementById(progress + "-address-select").selectedIndex = -1;
+
+            // Guests don't have this checkbox
+            if ($(progress + ':save_in_address_book')) {
+                $(progress + ':save_in_address_book').checked = true;
+            }
+
+            // Address dropdown might not be there
+            if (document.getElementById(progress + "-address-select")) {
+                // Unselect the selected address
+                document.getElementById(progress + "-address-select").selectedIndex = -1;
+            }
             // fix any chosen elements
-            jQuery("select").trigger("chosen:updated");
+            if (usingChosen) {
+                jQuery("select").trigger("chosen:updated");
+            }
         });
+
         $('cancel-' + progress + '-address').observe('click', function () {
             addressValidationModal.close();
             $(progress + '-new-address-form').show();
@@ -237,10 +255,13 @@ function success(transport, progress, section) {
             // unselect the selected address
             document.getElementById(progress + "-address-select").selectedIndex = -1;
             // fix any chosen elements
-            jQuery("select").trigger("chosen:updated");
+            if (usingChosen) {
+                jQuery("select").trigger("chosen:updated");
+            }
         });
 
     } else {
+
         var street_line_1 = response.address_line_1;
         var street_line_2 = '';
         if (response.address_line_2) {
@@ -274,11 +295,16 @@ function success(transport, progress, section) {
             $(progress + ':city').value = city;
             $(progress + ':region_id').value = getRegionId(region, progress);
             $(progress + ':postcode').value = postcode;
-            // unselect the selected address
+            // Unselect the selected address
             document.getElementById(progress + "-address-select").selectedIndex = -1;
-            // fix any chosen elements
-            jQuery("select").trigger("chosen:updated");
 
+            // Check if we are using the Chosen jQuery plugin
+            var usingChosen = typeof jQuery().chosen !== 'undefined';
+
+            // Fix any chosen elements
+            if (usingChosen) {
+                jQuery("select").trigger("chosen:updated");
+            }
         });
     }
 }
