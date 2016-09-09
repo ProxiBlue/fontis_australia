@@ -76,7 +76,7 @@ class Fontis_Australia_Model_Address_LocalLookup implements Fontis_Australia_Mod
         $result = $conn->fetchAll(
             'SELECT au.*, dcr.region_id FROM ' . $res->getTableName('australia_postcode') . ' AS au
              INNER JOIN ' . $res->getTableName('directory_country_region') . ' AS dcr ON au.region_code = dcr.code
-             WHERE city = :city AND postcode = :postcode AND region_code = :state  
+             WHERE city = :city AND postcode = :postcode AND region_code = :state
              AND dcr.country_id = :country_id
              ORDER BY city, region_code, postcode ',
             array('city' => $suburb, 'postcode' => $postcode, 'state' => $state, 'country_id' => 'AU')
@@ -86,11 +86,10 @@ class Fontis_Australia_Model_Address_LocalLookup implements Fontis_Australia_Mod
             $result = $conn->fetchAll(
                 'SELECT DISTINCT au.*, dcr.region_id FROM ' . $res->getTableName('australia_postcode') . ' AS au
              RIGHT JOIN ' . $res->getTableName('directory_country_region') . ' AS dcr ON au.region_code = dcr.code
-             WHERE (postcode = :postcode)  
-             OR (city = :city) 
-             OR (city = :city AND postcode = :postcode) 
-             OR (postcode = :postcode AND region_code = :state) 
-             AND dcr.country_id = :country_id
+             WHERE (postcode = :postcode AND dcr.country_id = :country_id)
+             OR (city = :city AND dcr.country_id = :country_id)
+             OR (city = :city AND postcode = :postcode AND dcr.country_id = :country_id)
+             OR (postcode = :postcode AND region_code = :state AND dcr.country_id = :country_id)
              ORDER BY city, region_code, postcode',
                 array('city' => $suburb, 'postcode' => $postcode, 'state' => $state, 'country_id' => 'AU')
             );
